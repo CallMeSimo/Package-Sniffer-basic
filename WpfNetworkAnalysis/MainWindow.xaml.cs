@@ -16,8 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SharpPcap;
 using System.Threading;
-
-
+using SharpPcap.LibPcap;
 
 namespace WpfNetworkAnalysis
 {
@@ -44,6 +43,9 @@ namespace WpfNetworkAnalysis
         }
 
         private List<NetworkObject_> networkObjects = new List<NetworkObject_>();
+
+        Thread backgroundThreadNetworkSniffer = new Thread(new ThreadStart(NetworkSniffer));
+
 
         /*        vvv          LIST UPDATE       vvv          */
         public void updateListResultLoopback()
@@ -169,15 +171,14 @@ namespace WpfNetworkAnalysis
 
 
 
-        public void NetworkSniffer()
+        public static void NetworkSniffer()
         {
-
             void Device_OnPacketArrival(object s, PacketCapture e)
             {
                 System.Diagnostics.Debug.WriteLine("THIS: " + e.GetPacket());
             }
 
-            using var device = CaptureDeviceList.Instance[0];
+            using var device = LibPcapLiveDeviceList.Instance[0];
             device.Open();
             device.OnPacketArrival += Device_OnPacketArrival;
             device.StartCapture();
@@ -217,7 +218,13 @@ namespace WpfNetworkAnalysis
 
         private void Sniffer(object sender, RoutedEventArgs e)
         {
-            NetworkSniffer();
+            //NetworkSniffer();
+            backgroundThreadNetworkSniffer.Start();
+        }
+
+        private void SnifferStop(object sender, RoutedEventArgs e)
+        {
+            backgroundThreadNetworkSniffer.Suspend();
         }
     }
 }
