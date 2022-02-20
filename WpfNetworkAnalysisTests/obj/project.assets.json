@@ -6128,24 +6128,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\wassim.elhaddaoui\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\wassi\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\wassim.elhaddaoui\\Documents\\GitHub\\ExamensArbete\\WpfNetworkAnalysisTests\\WpfNetworkAnalysisTests.csproj",
+      "projectUniqueName": "D:\\GitHub\\ExamensArbete\\WpfNetworkAnalysisTests\\WpfNetworkAnalysisTests.csproj",
       "projectName": "WpfNetworkAnalysisTests",
-      "projectPath": "C:\\Users\\wassim.elhaddaoui\\Documents\\GitHub\\ExamensArbete\\WpfNetworkAnalysisTests\\WpfNetworkAnalysisTests.csproj",
-      "packagesPath": "C:\\Users\\wassim.elhaddaoui\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\wassim.elhaddaoui\\Documents\\GitHub\\ExamensArbete\\WpfNetworkAnalysisTests\\obj\\",
+      "projectPath": "D:\\GitHub\\ExamensArbete\\WpfNetworkAnalysisTests\\WpfNetworkAnalysisTests.csproj",
+      "packagesPath": "C:\\Users\\wassi\\.nuget\\packages\\",
+      "outputPath": "D:\\GitHub\\ExamensArbete\\WpfNetworkAnalysisTests\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\wassim.elhaddaoui\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\wassi\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6159,8 +6154,8 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "C:\\Users\\wassim.elhaddaoui\\Documents\\GitHub\\ExamensArbete\\WpfNetworkAnalysis\\WpfNetworkAnalysis.csproj": {
-              "projectPath": "C:\\Users\\wassim.elhaddaoui\\Documents\\GitHub\\ExamensArbete\\WpfNetworkAnalysis\\WpfNetworkAnalysis.csproj"
+            "D:\\GitHub\\ExamensArbete\\WpfNetworkAnalysis\\WpfNetworkAnalysis.csproj": {
+              "projectPath": "D:\\GitHub\\ExamensArbete\\WpfNetworkAnalysis\\WpfNetworkAnalysis.csproj"
             }
           }
         }
@@ -6212,7 +6207,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   }

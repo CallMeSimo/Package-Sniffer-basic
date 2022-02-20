@@ -16,18 +16,7 @@
             <ColumnDefinition Width="209*"/>
         </Grid.ColumnDefinitions>
         <Label x:Name="Scan_option" Content="scan option&#xD;&#xA;" HorizontalAlignment="Left" Margin="680,96,0,0" VerticalAlignment="Top" Width="82" Grid.Column="1" Height="27" Foreground="White" Grid.Row="1"/>
-        <ListBox x:Name="lst" d:ItemsSource="{d:SampleData ItemCount=0}" Margin="16,0,21,109" SelectionChanged="ListBox_SelectionChanged" RenderTransformOrigin="0.5,0.5" Height="269" VerticalAlignment="Bottom" Background="#FFE0E0E0" BorderBrush="#FF464646" BorderThickness="1,1,1,1" Grid.ColumnSpan="2" Grid.RowSpan="2" FontFamily="SimSun-ExtB" FontSize="11">
-            <ListBox.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform AngleY="-0.609"/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="-1.122"/>
-                </TransformGroup>
-            </ListBox.RenderTransform>
-        </ListBox>
-
-        <TextBlock Margin="0,0,10,126" TextWrapping="Wrap" FontSize="16" Height="59" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Grid.Column="1" Grid.Row="1"><Run Text=".-----"/><Run Language="sv-se" Text=" "/><Run Text="--"/><Run Language="sv-se" Text=" "/><Run Text="-"/><Run Language="sv-se" Text=" "/><Run Text="--."/><LineBreak/><Run Text="| SimoScan |"/><LineBreak/><Run Text="'-----"/><Run Language="sv-se" Text=" "/><Run Text="--"/><Run Language="sv-se" Text=" "/><Run Text="--"/><Run Language="sv-se" Text=" "/><Run Text="-'"/></TextBlock>
+        <TextBlock Margin="0,0,10,43" TextWrapping="Wrap" FontSize="16" Height="59" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Grid.Column="1" Grid.Row="1"><Run Text=".-----"/><Run Language="sv-se" Text=" "/><Run Text="--"/><Run Language="sv-se" Text=" "/><Run Text="-"/><Run Language="sv-se" Text=" "/><Run Text="--."/><LineBreak/><Run Text="| SimoScan |"/><LineBreak/><Run Text="'-----"/><Run Language="sv-se" Text=" "/><Run Text="--"/><Run Language="sv-se" Text=" "/><Run Text="--"/><Run Language="sv-se" Text=" "/><Run Text="-'"/></TextBlock>
         <DockPanel Height="17" VerticalAlignment="Top" HorizontalAlignment="Left" Width="1000" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
@@ -45,8 +34,23 @@
             </Menu>
             <TextBox AcceptsReturn="True" />
         </DockPanel>
+        <TextBox MinWidth="150" AcceptsReturn="True" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="InputTextBox" Grid.Column="1" Margin="150,140,0,0" Grid.Row="1"/>
         <Button x:Name="loopbackScan" Content="░█▀▀░█▀▀░█▀█░█▀█&#xD;&#xA;░▀▀█░█░░░█▀█░█░█&#xD;&#xA;░▀▀▀░▀▀▀░▀░▀░▀░▀&#xD;&#xA;" Margin="0,196,0,0" Click="Loopback" FontSize="6" BorderBrush="Black" BorderThickness="0,0,0,0" HorizontalAlignment="Center" Width="100" Grid.Row="1" Height="29" VerticalAlignment="Top"/>
         <Button Content="░█▀▀░█▀▀░█▀█░█▀█&#xA;░▀▀█░█░░░█▀█░█░█&#xA;░▀▀▀░▀▀▀░▀░▀░▀░▀&#xA;" Margin="0,0,0,56" Click="ConnectedDevicedButton" FontSize="6" BorderBrush="Black" BorderThickness="0,0,0,0" HorizontalAlignment="Left" Width="100" Grid.Row="1" Height="29" VerticalAlignment="Bottom" Grid.Column="1"/>
+        <Button Content="░█▀▀░█▀▀░█▀█░█▀█&#xA;░▀▀█░█░░░█▀█░█░█&#xA;░▀▀▀░▀▀▀░▀░▀░▀░▀&#xA;" Margin="150,0,0,56" Click="SearchPing" FontSize="6" BorderBrush="Black" BorderThickness="0,0,0,0" HorizontalAlignment="Left" Width="100" Grid.Row="1" Height="29" VerticalAlignment="Bottom" Grid.Column="1"/>
+        <Button Content="░█▀▀░█▀▀░█▀█░█▀█&#xA;░▀▀█░█░░░█▀█░█░█&#xA;░▀▀▀░▀▀▀░▀░▀░▀░▀&#xA;" Margin="318,0,0,56" Click="Sniffer" FontSize="6" BorderBrush="Black" BorderThickness="0,0,0,0" HorizontalAlignment="Left" Width="100" Grid.Row="1" Height="29" VerticalAlignment="Bottom" Grid.Column="1"/>
 
+        <DataGrid Name = "dataGridNetworkObject" ItemsSource="{Binding networkObjects}"  AlternatingRowBackground = "LightBlue"  
+         AlternationCount = "2" AutoGenerateColumns = "False" Grid.ColumnSpan="2" Margin="50,64,298,217" Grid.RowSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn MinWidth="100" Header = "MacAddress" Binding = "{Binding MacAddress}" />
+                <DataGridTextColumn MinWidth="100" Header = "Ip" Binding = "{Binding Ip}" />
+                <DataGridTextColumn MinWidth="50" Header = "Host" Binding = "{Binding HostName}" />
+                <DataGridTextColumn MinWidth="100" Header = "Description" Binding = "{Binding Description}" />
+                <DataGridTextColumn MinWidth="15" Header = "RoundTrip" Binding = "{Binding RoundTrip}" />
+                <DataGridTextColumn MinWidth="25" Header = "Status" Binding = "{Binding Status}" />
+            </DataGrid.Columns>
+
+        </DataGrid>
     </Grid>
 </Window>

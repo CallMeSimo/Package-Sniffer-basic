@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "c3544700-2cee-4e56-ba2f-84a623a70faf": {
+      "ProjectGuid": "c3544700-2cee-4e56-ba2f-84a623a70faf",
+      "DisplayName": "WpfNetworkAnalysisTests",
+      "ColorIndex": 0
+    },
+    "9492613d-6016-4802-88ce-b23625613bdc": {
+      "ProjectGuid": "9492613d-6016-4802-88ce-b23625613bdc",
+      "DisplayName": "WpfNetworkAnalysis",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

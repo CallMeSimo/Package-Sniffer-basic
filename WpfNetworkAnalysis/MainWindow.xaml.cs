@@ -15,6 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SharpPcap;
+using System.Threading;
+
+
 
 namespace WpfNetworkAnalysis
 {
@@ -30,90 +33,122 @@ namespace WpfNetworkAnalysis
 
         public class NetworkObject_
         {
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public string Ip { get; set; }
-            public float roundTrip { get; set; }
-            public float status { get; set; }
-
-            //public NetworkObject_(string hostName, string hostAddress, string hostIp)
-            //{
-            //    this.hostName = hostName;
-            //    this.hostAddress = hostAddress;
-            //    this.hostIp = hostIp;
-            //}
+            public string? Name { get; set; }
+            public string? Address { get; set; }
+            public string? MacAddress { get; set; }
+            public string? Ip { get; set; }
+            public float RoundTrip { get; set; }
+            public string? Status { get; set; }
+            public string? Description { get; set; }
 
         }
 
-        /*                  LIST UPDATE                 */
-        public void updateListResult()
+        private List<NetworkObject_> networkObjects = new List<NetworkObject_>();
+
+        /*        vvv          LIST UPDATE       vvv          */
+        public void updateListResultLoopback()
         {
             //Start fresh
-            lst.Items.Clear();
+            networkObjects.Clear();
+            dataGridNetworkObject.ItemsSource = null;
 
             //Arrange object
-            NetworkObject_ netObject = NetworkObjectExtensions.GetNetworkInfoSearch("Google.com");
-            lst.Items.Add("Hit: " + netObject.Address);
+            PingReply netObject = NetworkObjectExtensions.GetNetworkInfoLoopback();
+            networkObjects.Add(new NetworkObject_()
+            {
+                Status = netObject.Status.ToString(),
+                RoundTrip = netObject.RoundtripTime,
+                Ip = netObject.Address.ToString()
+            });
+            dataGridNetworkObject.ItemsSource = networkObjects;
 
         }
 
         public void UpdateListResultConnectedDevices()
         {
-            lst.Items.Clear();
+            //CLEAR
+            networkObjects.Clear();
+            dataGridNetworkObject.ItemsSource = null;
 
+            //ARRANGE
             CaptureDeviceList devices = ConnectedDevices();
+
+            //ACT
             foreach (var device in devices)
             {
-                lst.Items.Add("Hit: " + device.ToString());
+                networkObjects.Add(new NetworkObject_()
+                {
+                    Name = device.Name.ToString(),
+                    MacAddress = device.MacAddress.ToString(),
+                    Description = device.Description.ToString()
+                }
+                );
             }
+            dataGridNetworkObject.ItemsSource = networkObjects;
         }
+
+        public void UpdateListResultSearch()
+        {
+            //CLEAR
+            networkObjects.Clear();
+            dataGridNetworkObject.ItemsSource = null;
+
+            //ARRANGE
+            NetworkObject_ networkObjectSearch = NetworkObjectExtensions.GetNetworkInfoSearch(InputTextBox.Text);
+
+            //ACT
+            networkObjects.Add(networkObjectSearch);
+            dataGridNetworkObject.ItemsSource = networkObjects;
+
+        }
+        /*                  LIST UPDATE                 */
 
         public static class NetworkObjectExtensions
         {
-            public static void GetNetworkInfoLoopback(ListBox boxList)
+            public static PingReply GetNetworkInfoLoopback()//
             {
-                boxList.Items.Clear();
-
                 //Creates ping instance.
                 Ping selfPing = new Ping();
 
                 //Send ping to self
                 PingReply reply = selfPing.Send("127.0.0.1", 1000);
 
-                boxList.Items.Add("Hit: " + "127.0.0.1" + " : " + reply.RoundtripTime + "ms" + " : " + reply.Status);
-
-
+                return reply;
             } 
 
             public static NetworkObject_ GetNetworkInfoSearch(string search)
             {
-
-               // boxList.Items.Clear();
-
-                //Creates ping instance.
+                //Creates instance.
                 Ping myPing = new Ping();
+                NetworkObject_ networkObject = new NetworkObject_();
 
                 //Send ping
                 try
                 {
                     PingReply reply = myPing.Send(search, 1000);
 
-                    if (reply != null)
+                    if (reply.Status == IPStatus.Success)
                     {
                         //Save result.
-                        NetworkObject_ networkObject = new NetworkObject_();
-                        networkObject.roundTrip = reply.RoundtripTime;
-                        networkObject.Name = reply.Address.ToString();
+                        networkObject.RoundTrip = reply.RoundtripTime;
+                        networkObject.Ip = reply.Address.ToString();
                         networkObject.Address = search;
+                        networkObject.Status = reply.Status.ToString();
+                        networkObject.Description = reply.GetType().ToString();
 
-                        //boxList.Items.Add("Hit: " + networkObject.Address + " : " + networkObject.roundTrip + "ms" + " : " + reply.Status);
                         return networkObject;
                     }
                 }
-                catch
+                catch (PingException)
                 {
-                    //boxList.Items.Add("Hit: " + search + " : " + "Failed");
-                    return null;
+                    System.Diagnostics.Debug.WriteLine("passed");
+                    networkObject = new NetworkObject_ { Address = search, Status = "Missing" };
+                    return networkObject;
+                }
+                catch (ArgumentException)
+                {
+                    networkObject = new NetworkObject_ { Address = search, Status = "Missing" };
+                    return networkObject;
                 }
                 return null;
             }
@@ -132,9 +167,20 @@ namespace WpfNetworkAnalysis
             return devices;
         }
 
+
+
         public void NetworkSniffer()
         {
 
+            void Device_OnPacketArrival(object s, PacketCapture e)
+            {
+                System.Diagnostics.Debug.WriteLine("THIS: " + e.GetPacket());
+            }
+
+            using var device = CaptureDeviceList.Instance[0];
+            device.Open();
+            device.OnPacketArrival += Device_OnPacketArrival;
+            device.StartCapture();
         }
 
         private void SearchButton(object sender, RoutedEventArgs e)
@@ -149,14 +195,29 @@ namespace WpfNetworkAnalysis
 
         private void Loopback(object sender, RoutedEventArgs e)
         {
-
-            Console.WriteLine("pass");
-            updateListResult();
+            updateListResultLoopback();
         }
 
         private void ConnectedDevicedButton(object sender, RoutedEventArgs e)
         {
             UpdateListResultConnectedDevices();
+        }
+
+        private void SearchPing(object sender, RoutedEventArgs e)
+        {
+            //Thread UpdateListResultSearchThread = new Thread(new ThreadStart(UpdateListResultSearch));
+            //UpdateListResultSearchThread.Start();
+            UpdateListResultSearch();
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+        }
+
+        private void Sniffer(object sender, RoutedEventArgs e)
+        {
+            NetworkSniffer();
         }
     }
 }
