@@ -41,14 +41,15 @@
         <Button Content="░█▀▀░█▀▀░█▀█░█▀█&#xA;░▀▀█░█░░░█▀█░█░█&#xA;░▀▀▀░▀▀▀░▀░▀░▀░▀&#xA;" Margin="418,140,0,0" Click="Sniffer" FontSize="6" BorderBrush="Black" BorderThickness="0,0,0,0" HorizontalAlignment="Left" Width="100" Height="29" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
         <Button Content="░█▀▀░█▀▀░█▀█░█▀█&#xA;░▀▀█░█░░░█▀█░█░█&#xA;░▀▀▀░▀▀▀░▀░▀░▀░▀&#xA;" Margin="418,181,0,0" Click="SnifferStop" FontSize="6" BorderBrush="Black" BorderThickness="0,0,0,0" HorizontalAlignment="Left" Width="100" Height="29" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
 
-        <DataGrid Name = "dataGridNetworkObject" ItemsSource="{Binding networkObjects}"  AlternatingRowBackground = "LightBlue"  
-         AlternationCount = "2" AutoGenerateColumns = "False" Grid.ColumnSpan="2" Margin="50,64,298,217" Grid.RowSpan="2">
+        <DataGrid Name = "dataGridNetworkObject" MinWidth="350" ItemsSource="{Binding networkObjects}"  AlternatingRowBackground = "LightBlue"  
+         AlternationCount = "2" AutoGenerateColumns = "False" Grid.ColumnSpan="2" Margin="0,64,46,217" Grid.RowSpan="2" HorizontalAlignment="Right" Width="904">
             <DataGrid.Columns>
                 <DataGridTextColumn MinWidth="100" Header = "MacAddress" Binding = "{Binding MacAddress}" />
                 <DataGridTextColumn MinWidth="100" Header = "Ip" Binding = "{Binding Ip}" />
                 <DataGridTextColumn MinWidth="50" Header = "Host" Binding = "{Binding HostName}" />
                 <DataGridTextColumn MinWidth="100" Header = "Description" Binding = "{Binding Description}" />
                 <DataGridTextColumn MinWidth="15" Header = "RoundTrip" Binding = "{Binding RoundTrip}" />
+                <DataGridTextColumn MinWidth="15" Header = "Time" Binding = "{Binding Time}" />
                 <DataGridTextColumn MinWidth="25" Header = "Status" Binding = "{Binding Status}" />
             </DataGrid.Columns>
 
