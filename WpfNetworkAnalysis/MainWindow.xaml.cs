@@ -39,12 +39,10 @@ namespace WpfNetworkAnalysis
             public float RoundTrip { get; set; }
             public string? Status { get; set; }
             public string? Description { get; set; }
-
+            public string? Time { get; set; }
         }
 
         private List<NetworkObject_> networkObjects = new List<NetworkObject_>();
-
-        Thread backgroundThreadNetworkSniffer = new Thread(new ThreadStart(NetworkSniffer));
 
 
         /*        vvv          LIST UPDATE       vvv          */
@@ -63,7 +61,6 @@ namespace WpfNetworkAnalysis
                 Ip = netObject.Address.ToString()
             });
             dataGridNetworkObject.ItemsSource = networkObjects;
-
         }
 
         public void UpdateListResultConnectedDevices()
@@ -81,7 +78,7 @@ namespace WpfNetworkAnalysis
                 networkObjects.Add(new NetworkObject_()
                 {
                     Name = device.Name.ToString(),
-                    MacAddress = device.MacAddress.ToString(),
+                   // MacAddress = device.MacAddress.ToString(), Causes crash
                     Description = device.Description.ToString()
                 }
                 );
@@ -103,6 +100,17 @@ namespace WpfNetworkAnalysis
             dataGridNetworkObject.ItemsSource = networkObjects;
 
         }
+
+        public void UpdateListResultPackage()
+        {
+            //CLEAR
+            networkObjects.Clear();
+            //dataGridNetworkObject.ItemsSource = null;
+
+            //ARRANGE + ACT
+            NetworkSniffer();
+        }
+
         /*                  LIST UPDATE                 */
 
         public static class NetworkObjectExtensions
@@ -169,25 +177,55 @@ namespace WpfNetworkAnalysis
             return devices;
         }
 
-
-
-        public static void NetworkSniffer()
+        public void NetworkSniffer()
         {
-            void Device_OnPacketArrival(object s, PacketCapture e)
-            {
-                System.Diagnostics.Debug.WriteLine("THIS: " + e.GetPacket());
-            }
+            networkObjects.Clear();
+            dataGridNetworkObject.ItemsSource = networkObjects;
 
-            using var device = LibPcapLiveDeviceList.Instance[0];
-            device.Open();
-            device.OnPacketArrival += Device_OnPacketArrival;
-            device.StartCapture();
+            var devices = CaptureDeviceList.Instance;
+            var device = devices[dataGridNetworkObject.SelectedIndex];
+
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("Passed");
+                //int i = int.Parse(dataGridNetworkObject.SelectedIndex();
+
+                device.OnPacketArrival +=
+                    new PacketArrivalEventHandler(Device_OnPacketArrival);
+                device.Open(mode: DeviceModes.Promiscuous | DeviceModes.DataTransferUdp | DeviceModes.NoCaptureLocal, read_timeout: 1000);
+                device.StartCapture();
+            }
+            catch
+            {
+                device.Close();
+            }
         }
 
-        private void SearchButton(object sender, RoutedEventArgs e)
+        public void Device_OnPacketArrival(object sender, PacketCapture e)
         {
-            //GetNetworkInfo();
-            //updateListResult();
+            System.Diagnostics.Debug.WriteLine("PassedHERE");
+            NetworkObject_ networkObject = new NetworkObject_();
+
+
+            var time = e.Header.Timeval.Date;
+            var len = e.Data.Length;
+            var rawPacket = e.GetPacket();
+
+            networkObject.Description = rawPacket.ToString();
+            networkObject.Name = e.Device.ToString();
+            networkObject.Time = time.ToString();
+
+            returnPackage(networkObject);
+        }
+
+        private void returnPackage(NetworkObject_ obj)
+        {
+
+            Dispatcher.Invoke(() => networkObjects.Add(obj));
+
+            //await Task.WaitAll()
+
+            //dataGridNetworkObject.ItemsSource = networkObjects;
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -218,13 +256,19 @@ namespace WpfNetworkAnalysis
 
         private void Sniffer(object sender, RoutedEventArgs e)
         {
-            //NetworkSniffer();
-            backgroundThreadNetworkSniffer.Start();
+            NetworkSniffer();
         }
 
         private void SnifferStop(object sender, RoutedEventArgs e)
         {
-            backgroundThreadNetworkSniffer.Suspend();
+            var devices = CaptureDeviceList.Instance;
+
+            foreach (var device in devices)
+            {
+                device.StopCapture();
+                device.Close();
+            }
+            dataGridNetworkObject.Items.Refresh(); 
         }
     }
 }
